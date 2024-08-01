@@ -1,9 +1,13 @@
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
 
 const app = express();
 
 require("dotenv").config();
+
+const { DB_HOST: urlDb } = process.env;
+const connection = mongoose.connect(urlDb);
 
 app.use(cors());
 app.use(express.json());
@@ -31,6 +35,17 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(8000, () => {
-  console.log(`Server is running on port 8000`);
-});
+const startServer = async () => {
+  try {
+    await connection;
+    console.log("Database connection successful");
+    app.listen(8000, async () => {
+      console.log(`Server is running on port 8000`);
+    });
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+};
+
+startServer();
