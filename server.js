@@ -39,7 +39,7 @@ const startServer = async () => {
   try {
     await connection;
     console.log("Database connection successful");
-    app.listen(8000, async () => {
+    app.listen(process.env.PORT, async () => {
       console.log(`Server is running on port 8000`);
     });
   } catch (error) {
