@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
+const options = require('./config/swagger-config');
 
 const app = express();
 
@@ -20,6 +23,9 @@ app.use("/ownRecipes", require("./routes/ownRecipes"));
 app.use("/favorite", require("./routes/favorite"));
 app.use("/popular-recipe", require("./routes/popularRecipe"));
 app.use("/shopping-list", require("./routes/shoppingList"));
+
+//const specs = swaggerJsdoc(options);
+//app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
