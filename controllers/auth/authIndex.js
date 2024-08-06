@@ -7,8 +7,12 @@
 const gravatar = require("gravatar");
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
+const path = require("path");
+const { v4: uuidV4 } = require("uuid");
+const fs = require("fs").promises;
 
 const User = require("../../models/user");
+const isImageAndTransform = require("./auth-service");
 
 require("dotenv").config();
 
@@ -107,8 +111,10 @@ const getCurrentUser = async (req, res, next) => {
     if (!user) {
       res.status(401).json({ message: "Not authorized" });
     }
-
-    res.status(200).json({ message: `${user}` });
+    return res.json({
+      status: 200,
+      data: { user },
+    });
   } catch (error) {
     console.log(error);
     next();
@@ -123,14 +129,38 @@ const updateUser = async (req, res, next) => {
   }
   const { _id } = req.user;
   const { name } = req.body;
-
   try {
     const user = await User.findOne({ _id });
-    user.name = name;
+    if (name) user.name = name;
+    if (req.file) {
+      const storageAvatarDir = path.join(process.cwd(), "public/avatars");
+
+      const { path: temporaryPath } = req.file;
+      const extension = path.extname(temporaryPath);
+      const fileName = `${uuidV4()}${extension}`;
+      const filePath = path.join(storageAvatarDir, fileName);
+
+      try {
+        await fs.rename(temporaryPath, filePath);
+      } catch (e) {
+        await fs.unlink(temporaryPath);
+        return next(e);
+      }
+      const isValidAndTransform = await isImageAndTransform(filePath);
+      if (!isValidAndTransform) {
+        await fs.unlink(filePath);
+        return res.status(400).json({ message: "Isnt a photo but pretending" });
+      }
+      const newAvatarURL = `/avatars/${fileName}`;
+      user.avatarURL = newAvatarURL;
+    }
 
     await user.save();
-
-    res.status(200).json({ message: "User updated successfully", user });
+    return res.json({
+      status: 200,
+      data: { user },
+      message: "User updated successfully",
+    });
   } catch (err) {
     next(err);
   }

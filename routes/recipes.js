@@ -1,11 +1,11 @@
 const express = require("express");
 const {
-    getCategoryList,
-    getMainPageRecipes,
-    getRecipeWithLimit,
-    getRecipeById,
-    //searchByKey
-} = require('../controllers/recipes/recipesIndex');
+  getCategoryList,
+  getMainPageRecipes,
+  getRecipeWithLimit,
+  getRecipeById,
+  //searchByKey
+} = require("../controllers/recipes/recipesIndex");
 
 const router = express.Router();
 
@@ -31,13 +31,13 @@ const router = express.Router();
  *              message: "Bad Request"
  */
 // GET Category list
-router.get('/category-list', getCategoryList);
+router.get("/category-list", getCategoryList);
 
 //GET Main-page
-router.get('/main-page', getMainPageRecipes);
+router.get("/main-page", getMainPageRecipes);
 
 //GET Category limit 8
-router.get('/:category', getRecipeWithLimit);
+router.get("/:category", getRecipeWithLimit);
 
 /**
  * @swagger
@@ -64,9 +64,9 @@ router.get('/:category', getRecipeWithLimit);
  *       404:
  *         description: Student not found
  */
-    router.get('/recipes/:id', getRecipeById);
+router.get("/recipes/:id", getRecipeById);
 
 //Search
-router.get('/search', searchByKey);
+// router.get('/search', searchByKey);
 
 module.exports = router;
