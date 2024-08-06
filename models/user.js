@@ -22,6 +22,15 @@ const userSchema = new mongoose.Schema({
   avatarURL: {
     type: String,
   },
+  favorite: {
+    type: Array,
+  },
+  ownRecipes: {
+    type: Array,
+  },
+  shoppingList: {
+    type: Array,
+  },
 });
 
 userSchema.methods.setPassword = async function (password) {
