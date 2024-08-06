@@ -7,6 +7,7 @@
 const express = require("express");
 
 const auth = require("../middleware/authenticate");
+const uploadMiddleware = require("../middleware/uploadMiddleware");
 const {
   createUser,
   loginUser,
@@ -21,6 +22,11 @@ router.post("/signup", createUser);
 router.post("/login", loginUser);
 router.get("/logout", auth, logoutUser);
 router.get("/currentUser", auth, getCurrentUser);
-router.patch("/updateUser", auth, updateUser);
+router.patch(
+  "/updateUser",
+  auth,
+  uploadMiddleware.single("avatar"),
+  updateUser
+);
 
 module.exports = router;

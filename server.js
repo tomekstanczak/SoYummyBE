@@ -1,11 +1,20 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
-const options = require('./config/swagger-config');
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
+const options = require("./config/swagger-config");
+const path = require("path");
+
+const setupFolder = require("./server-service");
 
 const app = express();
+
+app.set("view engine", "ejs");
+app.use(express.static(path.resolve(__dirname, "./public")));
+
+const tempDir = path.join(process.cwd(), "temp");
+const storageAvatarDir = path.join(process.cwd(), "public/avatars");
 
 require("dotenv").config();
 
@@ -46,6 +55,8 @@ const startServer = async () => {
     await connection;
     console.log("Database connection successful");
     app.listen(process.env.PORT, async () => {
+      await setupFolder(tempDir);
+      await setupFolder(storageAvatarDir);
       console.log(`Server is running on port 8000`);
     });
   } catch (error) {
