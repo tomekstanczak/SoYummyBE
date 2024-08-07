@@ -1,12 +1,10 @@
-//  /search Utwórz punkt końcowy do wyszukiwania przepisów według słowa kluczowego w tytule.
-
 const {
     fetchCategoryList,
     getDistinctCategories,
     getRecipesByCategory,
     fetchRecipeById,
     fetchRecipeWithLimit,
-    //searchRecipesByTitle
+    searchRecipesByTitle
 } = require('../../controllers/recipes/recipes-service');
 
 const getCategoryList = async (req, res, next) => {
@@ -78,34 +76,34 @@ const getRecipeById = async (req, res, next) => {
         next(error);
     }
 };
-// // do przeróbki
-// const searchByKey = async (req, res, next) => {
-//     try {
-//         const { keyword } = req.query;
-// console.log(keyword)
-//         if (!keyword) {
-//             return res.status(400).json({
-//                 status: 400,
-//                 message: 'Keyword is missing.'
-//             });
-//         }
 
-//         const recipes = await searchRecipesByTitle(keyword);
-//         console.log(recipes)
-//         return res.status(200).json({
-//             status: 200,
-//             data: { recipes }
-//         });
-//     } catch (error) {
-//         console.log(error.message);
-//         next(error);
-//     }
-// };
+const searchByKey = async (req, res, next) => {
+    try {
+        const { keyword } = req.query;
+
+        if (!keyword) {
+            return res.status(400).json({
+                status: 400,
+                message: 'Keyword is missing.'
+            });
+        };
+
+        const recipes = await searchRecipesByTitle(keyword);
+        console.log(recipes)
+        return res.status(200).json({
+            status: 200,
+            data: { recipes }
+        });
+    } catch (error) {
+        console.log(error.message);
+        next(error);
+    }
+};
 
 module.exports = {
     getRecipeById,
     getCategoryList,
     getMainPageRecipes,
     getRecipeWithLimit,
-    //searchByKey,
+    searchByKey,
 };

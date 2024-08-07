@@ -4,7 +4,7 @@ const {
     getMainPageRecipes,
     getRecipeWithLimit,
     getRecipeById,
-    //searchByKey
+    searchByKey,
 } = require('../controllers/recipes/recipesIndex');
 
 const router = express.Router();
@@ -30,14 +30,15 @@ const router = express.Router();
  *             error:
  *              message: "Bad Request"
  */
+
 // GET Category list
-router.get('/category-list', getCategoryList);
+router.get('/recipes/category-list', getCategoryList);
 
 //GET Main-page
-router.get('/main-page', getMainPageRecipes);
+router.get('/recipes/main-page', getMainPageRecipes);
 
 //GET Category limit 8
-router.get('/:category', getRecipeWithLimit);
+router.get('/recipes/:category', getRecipeWithLimit);
 
 /**
  * @swagger
@@ -62,9 +63,9 @@ router.get('/:category', getRecipeWithLimit);
  *             example:
  *               data: [{}]
  *       404:
- *         description: Student not found
+ *         description: Recipe not found
  */
-    router.get('/recipes/:id', getRecipeById);
+router.get('/recipe/:id', getRecipeById);
 
 //Search
 router.get('/search', searchByKey);
