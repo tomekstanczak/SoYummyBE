@@ -24,12 +24,14 @@ const userSchema = new mongoose.Schema({
   },
   favorite: {
     type: Array,
+    default: [],
   },
   ownRecipes: {
     type: Array,
   },
   shoppingList: {
     type: Array,
+    default: [],
   },
 });
 
