@@ -7,6 +7,8 @@ const {
     searchByKey,
 } = require('../controllers/recipes/recipesIndex');
 
+
+
 const router = express.Router();
 
 /**
@@ -32,6 +34,7 @@ const router = express.Router();
  */
 
 // GET Category list
+
 router.get('/recipes/category-list', getCategoryList);
 
 //GET Main-page
@@ -65,9 +68,11 @@ router.get('/recipes/:category', getRecipeWithLimit);
  *       404:
  *         description: Recipe not found
  */
+
 router.get('/recipe/:id', getRecipeById);
 
+
 //Search
-router.get('/search', searchByKey);
+// router.get('/search', searchByKey);
 
 module.exports = router;

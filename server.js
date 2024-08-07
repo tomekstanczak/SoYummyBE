@@ -1,9 +1,17 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+
 const { swaggerSpec, swaggerUi } = require('./config/swagger-config');
 
+
 const app = express();
+
+app.set("view engine", "ejs");
+app.use(express.static(path.resolve(__dirname, "./public")));
+
+const tempDir = path.join(process.cwd(), "temp");
+const storageAvatarDir = path.join(process.cwd(), "public/avatars");
 
 require("dotenv").config();
 
@@ -50,6 +58,8 @@ const startServer = async () => {
     await connection;
     console.log("Database connection successful");
     app.listen(process.env.PORT, async () => {
+      await setupFolder(tempDir);
+      await setupFolder(storageAvatarDir);
       console.log(`Server is running on port 8000`);
     });
   } catch (error) {
