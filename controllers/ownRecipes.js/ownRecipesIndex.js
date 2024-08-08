@@ -2,11 +2,15 @@
 // /ownRecipes/ - utwórz punkt końcowy do usuwania przepisu.
 // /ownRecipes/ - utwórz punkt końcowy do otrzymywania przepisów utworzonych przez tego samego użytkownika.
 const Joi = require("joi");
-const Recipe = require("../../models/recipes");
-const User = require("../../models/user");
 // const isImageAndTransform = require("../auth/auth-service");
 const path = require("path");
 // const { v4: uuidV4 } = require("uuid");
+const {
+  removeRecipe,
+  fetchRecipe,
+  fetchOwnRecipes,
+  insertRecipe,
+} = require("./ownRecipes-service");
 
 const recipeSchema = Joi.object({
   title: Joi.string().required(),
@@ -16,10 +20,6 @@ const recipeSchema = Joi.object({
   instructions: Joi.string().required(),
 });
 
-// require("dotenv").config();
-
-// const { SECRET } = process.env;
-
 const createRecipe = async (req, res, next) => {
   const { error, value } = recipeSchema.validate(req.body);
   if (error) {
@@ -27,31 +27,9 @@ const createRecipe = async (req, res, next) => {
   }
 
   const { area, title, category, time, ingredients, instructions } = req.body;
-  const { _id } = req.user;
-
-  // if (req.file) {
-  //   const storagePhotoDir = path.join(process.cwd(), "public/photo");
-
-  //   const { path: temporaryPath } = req.file;
-  //   const extension = path.extname(temporaryPath);
-  //   const fileName = `${uuidV4()}${extension}`;
-  //   const filePath = path.join(storagePhotoDir, fileName);
-
-  //   try {
-  //     await fs.rename(temporaryPath, filePath);
-  //   } catch (e) {
-  //     await fs.unlink(temporaryPath);
-  //     return next(e);
-  //   }
-  //   const isValidAndTransform = await isImageAndTransform(filePath);
-  //   if (!isValidAndTransform) {
-  //     await fs.unlink(filePath);
-  //     return res.status(400).json({ message: "Isnt a photo but pretending" });
-  //   }
-  //   const photoURL = `/photos/${fileName}`;
+  const { _id: userId } = req.user;
   try {
-    const user = await User.findOne(_id);
-    const newRecipe = new Recipe({
+    const recipe = await insertRecipe({
       area,
       title,
       // thumb: photoURL,
@@ -61,15 +39,41 @@ const createRecipe = async (req, res, next) => {
       instructions,
       favorites: [],
       youtube: "",
+      userId,
     });
-    await newRecipe.save();
-    const ownRecipes = user.ownRecipes;
-    ownRecipes.push(newRecipe);
-    await user.save();
-    return res.status(201).json({ message: "Recipe created", newRecipe });
+    return res.status(201).json({ message: "Recipe created", recipe });
   } catch (err) {
     next(err);
   }
 };
 
-module.exports = createRecipe;
+const deleteRecipe = async (req, res, next) => {
+  const { _id: userId } = req.user;
+  const { id: recipeId } = req.params;
+  console.log(req.user);
+  try {
+    const recipeToDelete = await fetchRecipe(recipeId);
+
+    if (recipeToDelete.owner.toString() === userId.toString()) {
+      await removeRecipe(recipeId);
+      res.json({
+        status: 200,
+        message: `You  have deleted recipe: ${recipeToDelete.title}`,
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getOwnRecipes = async (req, res, next) => {
+  const { _id: userId } = req.user;
+  try {
+    const recipes = await fetchOwnRecipes(userId);
+    res.json(recipes);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { createRecipe, deleteRecipe, getOwnRecipes };

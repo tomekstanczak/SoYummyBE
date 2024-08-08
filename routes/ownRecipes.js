@@ -5,14 +5,15 @@ const express = require("express");
 const router = express.Router();
 
 const uploadMiddleware = require("../middleware/uploadMiddleware");
-const createRecipe = require("../controllers/ownRecipes.js/ownRecipesIndex");
+const {
+  createRecipe,
+  deleteRecipe,
+  getOwnRecipes,
+} = require("../controllers/ownRecipes.js/ownRecipesIndex");
 const auth = require("../middleware/authenticate");
 
-router.post(
-  "/addRecipe",
-  auth,
-  uploadMiddleware.single("avatar"),
-  createRecipe
-);
+router.post("/", auth, uploadMiddleware.single("avatar"), createRecipe);
+router.delete("/:id", auth, deleteRecipe);
+router.get("/", auth, getOwnRecipes);
 
 module.exports = router;
