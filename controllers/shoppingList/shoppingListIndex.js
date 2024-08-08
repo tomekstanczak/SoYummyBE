@@ -1,14 +1,22 @@
 const Ingredient = require('../../models/ingredients');
-const User = require('../../models/user');
 const {
     fetchShoppingList,
-    removeItem
+    fetchUserById
 } = require('./shoppingList-service');
 
 
 const getShoppingList = async (req, res, next) => {
+    const userId = req.user._id;
     try {
-        const products = await fetchShoppingList();
+        const user = await fetchUserById(userId);
+        if (!user) {
+            return res.status(404).json({
+                status: 404,
+                message: "User not found"
+            });
+        }
+
+        const products = await fetchShoppingList(user.shoppingList);
         res.json({
             status: 200,
             data: { products }
@@ -24,7 +32,7 @@ const addProduct = async (req, res, next) => {
     const userId = req.user._id;
 
     try {
-        const user = await User.findById(userId);
+        const user = await fetchUserById(userId);
         if (!user) {
             return res.status(404).json({
                 status: 404,
@@ -50,20 +58,32 @@ const addProduct = async (req, res, next) => {
 };
 
 const deleteProduct = async (req, res, next) => {
-    const productId = req.params.id;
-    
+    const productId = req.params._id;
+    const userId = req.user._id;
+
     try {
-        if (!productId) {
+        const user = await fetchUserById(userId);
+        if (!user) {
             return res.status(404).json({
                 status: 404,
-                message: "Not found"
+                message: "User not found"
             });
         }
-        await removeItem(productId)
+
+        const productIndex = user.shoppingList.findIndex(item => item.productId === productId);
+        if (productIndex === -1) {
+            return res.status(404).json({
+                status: 404,
+                message: "Product not found in shopping list"
+            });
+        }
+
+        user.shoppingList.splice(productIndex, 1);
+        await user.save();
 
         res.json({
             status: 200,
-            message: "Product deleted"
+            message: "Product deleted from shopping list"
         });
         
     } catch (error) {
