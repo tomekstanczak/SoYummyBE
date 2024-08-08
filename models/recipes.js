@@ -36,7 +36,7 @@ const recipeSchema = new mongoose.Schema({
     },
     favorites: {
         type: Array,
-        default: false,
+        default: [],
     },
     youtube: {
         type: String,
@@ -44,7 +44,7 @@ const recipeSchema = new mongoose.Schema({
     },
     tags: {
         type: Array,
-        default: null,
+        default: [],
     },
     ingredients: {
         type: Array,
