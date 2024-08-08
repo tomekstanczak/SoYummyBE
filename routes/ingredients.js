@@ -1,6 +1,13 @@
-// ROUTE do -> Utwórz punkt końcowy do wyszukiwania przepisów według składnika.
-// ROUTE do -> Utwórz punkt końcowy, aby uzyskać listę składników. ingredients/list
 const express = require("express");
+
+const {
+    getIngredientsList,
+    getRecipeByIngredient
+    } = require('../controllers/ingredients/ingredientsIndex');
+
 const router = express.Router();
+
+router.get('/ingredients/list', getIngredientsList);
+router.get('/ingredients', getRecipeByIngredient);
 
 module.exports = router;

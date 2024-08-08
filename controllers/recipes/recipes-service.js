@@ -24,12 +24,12 @@ const fetchRecipeWithLimit = (category) => {
         category: category,
     }).limit(8)
 };
-// // do przeróbki
-// const searchRecipesByTitle = (keyword) => {
-//     return Recipe.find({
-//         title: { $regex: keyword, $options: 'i' }
-//     });
-// };
+
+const searchRecipesByTitle = (keyword) => {
+    return Recipe.find({
+        title: { $regex: keyword, $options: 'i' }
+    });
+};
 
 
 module.exports = {
@@ -38,5 +38,5 @@ module.exports = {
     getDistinctCategories,
     getRecipesByCategory,
     fetchRecipeWithLimit,
-    //searchRecipesByTitle,
+    searchRecipesByTitle
 }
