@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const path = require('path');
+const setupFolder = require('./server-service');
 
 const { swaggerSpec, swaggerUi } = require('./config/swagger-config');
 
