@@ -9,7 +9,7 @@ const { swaggerSpec, swaggerUi } = require("./config/swagger-config");
 const app = express();
 
 const corsOptions = {
-  origin: "https://twoja-domena.netlify.app",
+  origin: "https://master--tourmaline-wisp-85ff36.netlify.app/",
   optionsSuccessStatus: 200,
 };
 
