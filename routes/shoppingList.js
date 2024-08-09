@@ -8,6 +8,8 @@ const {
 
 const router = express.Router();
 
+
+
 router.get('/shopping-list', auth, getShoppingList);
 router.post('/shopping-list/add', auth, addProduct);
 router.delete('/shopping-list/delete/:id', auth, deleteProduct);

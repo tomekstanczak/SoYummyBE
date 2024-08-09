@@ -1,1 +1,20 @@
-// Utwórz punkt końcowy dla otrzymania popularnych przepisów. Popularność jest obliczana na podstawie liczby użytkowników, którzy dodali przepis do ulubionych.
+const { fetchAllRecipes } = require('./popularRecipes-service');
+
+const getPopularRecipes = async (req, res, next) => {
+    try {
+        const popularRecipes = await fetchAllRecipes();
+
+        res.status(200).json({
+            status: 200,
+            results: popularRecipes.length,
+            data: popularRecipes,
+        });
+    } catch (error) {
+        console.log(error.message);
+        next(error);
+    }
+};
+
+module.exports = {
+    getPopularRecipes
+}
