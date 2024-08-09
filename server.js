@@ -8,11 +8,6 @@ const { swaggerSpec, swaggerUi } = require("./config/swagger-config");
 
 const app = express();
 
-const corsOptions = {
-  origin: "https://master--tourmaline-wisp-85ff36.netlify.app/",
-  optionsSuccessStatus: 200,
-};
-
 app.set("view engine", "ejs");
 app.use(express.static(path.resolve(__dirname, "./public")));
 
@@ -24,7 +19,7 @@ require("dotenv").config();
 const { DB_HOST: urlDb } = process.env;
 const connection = mongoose.connect(urlDb);
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 //Middleware pomocniczy do logowania czy endpoint się wywołuje - do skasowania po zakończeniu pracy
 app.use((req, res, next) => {
