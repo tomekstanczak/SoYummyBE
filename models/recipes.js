@@ -36,7 +36,7 @@ const recipeSchema = new mongoose.Schema({
   },
   favorites: {
     type: Array,
-    default: false,
+    default: [],
   },
   youtube: {
     type: String,

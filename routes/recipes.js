@@ -7,16 +7,39 @@ const {
     searchByKey,
 } = require('../controllers/recipes/recipesIndex');
 
-
-
 const router = express.Router();
 
 /**
  * @swagger
- * /category-list:
+ * /recipes/category-list:
  *   get:
- *     summary: Get a list of all category list
+ *     summary: Get a list of all categories
  *     tags: [Category]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               data: [{}]
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             example:
+ *               error:
+ *                 message: "Bad Request"
+ */
+
+// GET Category list
+router.get('/recipes/category-list', getCategoryList);
+
+/**
+ * @swagger
+ * /recipes/main-page:
+ *   get:
+ *     summary: Get a list of main page recipes
+ *     tags: [Recipes]
  *     responses:
  *       200:
  *         description: Successful response
@@ -33,15 +56,36 @@ const router = express.Router();
  *              message: "Bad Request"
  */
 
-// GET Category list
-
-router.get('/recipes/category-list', getCategoryList);
-
 //GET Main-page
 router.get('/recipes/main-page', getMainPageRecipes);
 
+/**
+ * @swagger
+ * /recipes/:category:
+ *   get:
+ *     summary: Get a list of recipes by category with limit 8
+ *     tags: [Recipes]
+ *     parameters:
+ *      - name: category
+ *        description: Example - Beef
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               data: [{}]
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *          application/json:
+ *            example:
+ *             error:
+ *              message: "Bad Request"
+ */
+
 //GET Category limit 8
-router.get('/recipes/:category', getRecipeWithLimit);
+router.get('/recipes/:category', getRecipeWithLimit); //swagger ready
 
 /**
  * @swagger
@@ -73,6 +117,6 @@ router.get('/recipe/:id', getRecipeById);
 
 
 //Search
-// router.get('/search', searchByKey);
+router.get('/search', searchByKey);
 
 module.exports = router;

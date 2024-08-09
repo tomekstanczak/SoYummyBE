@@ -1,5 +1,8 @@
-// ROUTE do -> Utwórz punkt końcowy dla otrzymania popularnych przepisów. Popularność jest obliczana na podstawie liczby użytkowników, którzy dodali przepis do ulubionych.
 const express = require("express");
+const { getPopularRecipes } = require('../controllers/popularRecipes/popularRecipesIndex');
+
 const router = express.Router();
+
+router.get('/popular-recipe', getPopularRecipes);
 
 module.exports = router;
