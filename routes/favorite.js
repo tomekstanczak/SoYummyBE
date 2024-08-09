@@ -1,7 +1,15 @@
-// ROUTE do -> Utwórz punkt końcowy do dodawania przepisów do ulubionych.
-// ROUTE do -> Utwórz punkt końcowy do otrzymywania przepisów dodanych do ulubionych przez autoryzowanego użytkownika.
-// ROUTE do -> Utwórz punkt końcowy, aby usunąć przepisy autoryzowanego użytkownika dodane do ulubionych przez tego użytkownika.
 const express = require("express");
+const auth = require('../middleware/authenticate');
+const {
+    getFavoriteRecipes,
+    addFavoriteRecipe,
+    removeFavoriteRecipe
+} = require('../controllers/favorite/favoriteIndex');
+
 const router = express.Router();
+
+router.get('/favorite', auth, getFavoriteRecipes);
+router.post('/favorite/add', auth, addFavoriteRecipe);
+router.delete('/favorite/delete/:id', auth, removeFavoriteRecipe);
 
 module.exports = router;
