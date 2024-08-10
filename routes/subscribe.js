@@ -2,4 +2,9 @@
 const express = require("express");
 const router = express.Router();
 
+const auth = require("../middleware/authenticate");
+const sendEmail = require("../controllers/subscribe/subscribeIndex");
+
+router.post("/", auth, sendEmail);
+
 module.exports = router;

@@ -70,7 +70,7 @@ const getOwnRecipes = async (req, res, next) => {
   const { _id: userId } = req.user;
   try {
     const recipes = await fetchOwnRecipes(userId);
-    res.json(recipes);
+    return res.json(recipes);
   } catch (error) {
     next(error);
   }
