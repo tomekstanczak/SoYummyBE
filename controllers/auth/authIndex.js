@@ -82,13 +82,24 @@ const loginUser = async (req, res) => {
     const token = jwt.sign(payload, SECRET, { expiresIn: "12h" });
     user.token = token;
     user.save();
-    return res.json({ token });
+    return res.json({
+      status: 200,
+      data: {
+        token,
+        user: {
+          id: user._id,
+          email: user.email,
+          name: user.name, // Zwróć tylko to, co potrzebujesz
+        },
+      },
+    });
   } else {
     return res.status(401).json({ message: "Password is wrong" });
   }
 };
 
 const logoutUser = async (req, res, next) => {
+  console.log(req.user);
   try {
     const { _id } = req.user;
     const user = await User.findOne({ _id });
@@ -128,10 +139,11 @@ const updateUser = async (req, res, next) => {
     return res.status(400).json({ message: error.details[0].message });
   }
   const { _id } = req.user;
-  const { name } = req.body;
+  const { name, email } = req.body;
   try {
     const user = await User.findOne({ _id });
     if (name) user.name = name;
+    if (email) user.email = email;
     if (req.file) {
       const storageAvatarDir = path.join(process.cwd(), "public/avatars");
 
