@@ -79,19 +79,12 @@ const loginUser = async (req, res) => {
     const payload = {
       id: user._id,
     };
-    const token = jwt.sign(payload, SECRET, { expiresIn: "12h" });
+    const token = jwt.sign(payload, SECRET, { expiresIn: "48h" });
     user.token = token;
     user.save();
     return res.json({
       status: 200,
-      data: {
-        token,
-        user: {
-          id: user._id,
-          email: user.email,
-          name: user.name, // Zwróć tylko to, co potrzebujesz
-        },
-      },
+      data: { user },
     });
   } else {
     return res.status(401).json({ message: "Password is wrong" });
