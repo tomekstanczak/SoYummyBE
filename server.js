@@ -6,8 +6,8 @@ const setupFolder = require("./server-service");
 
 const { swaggerSpec, swaggerUi } = require("./config/swagger-config");
 
-app.use(cors());
 const app = express();
+app.use(cors());
 
 app.use(
   cors({
