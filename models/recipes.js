@@ -48,7 +48,7 @@ const recipeSchema = new mongoose.Schema({
   },
   ingredients: {
     type: Array,
-    required: [true, "Ingredients are required"],
+    required: [false, "Ingredients are required"],
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
