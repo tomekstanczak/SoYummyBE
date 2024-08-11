@@ -9,6 +9,19 @@ const { swaggerSpec, swaggerUi } = require("./config/swagger-config");
 app.use(cors());
 const app = express();
 
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "Accept",
+    ],
+    credentials: true,
+  })
+);
 app.set("view engine", "ejs");
 app.use(express.static(path.resolve(__dirname, "./public")));
 
