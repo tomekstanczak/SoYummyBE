@@ -12,7 +12,7 @@ const {
 } = require("../controllers/ownRecipes.js/ownRecipesIndex");
 const auth = require("../middleware/authenticate");
 
-router.post("/", auth, uploadMiddleware.single("avatar"), createRecipe);
+router.post("/", auth, uploadMiddleware.single("photo"), createRecipe);
 router.delete("/:id", auth, deleteRecipe);
 router.get("/", auth, getOwnRecipes);
 

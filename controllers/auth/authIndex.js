@@ -151,7 +151,7 @@ const updateUser = async (req, res, next) => {
         await fs.unlink(temporaryPath);
         return next(e);
       }
-      const isValidAndTransform = await isImageAndTransform(filePath);
+      const isValidAndTransform = await isImageAndTransform(filePath, 103, 103);
       if (!isValidAndTransform) {
         await fs.unlink(filePath);
         return res.status(400).json({ message: "Isnt a photo but pretending" });

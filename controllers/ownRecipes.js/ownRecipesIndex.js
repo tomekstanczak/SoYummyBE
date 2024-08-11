@@ -4,7 +4,9 @@
 const Joi = require("joi");
 // const isImageAndTransform = require("../auth/auth-service");
 const path = require("path");
-// const { v4: uuidV4 } = require("uuid");
+const { v4: uuidV4 } = require("uuid");
+const fs = require("fs").promises;
+
 const {
   removeRecipe,
   fetchRecipe,
@@ -12,12 +14,17 @@ const {
   insertRecipe,
 } = require("./ownRecipes-service");
 
+const isImageAndTransform = require("../auth/auth-service");
+
 const recipeSchema = Joi.object({
-  title: Joi.string().required(),
-  category: Joi.string().required(),
-  time: Joi.number().required(),
-  ingredients: Joi.array().required(),
-  instructions: Joi.string().required(),
+  title: Joi.string(),
+  area: Joi.string(),
+  category: Joi.string(),
+  time: Joi.number(),
+  thumb: Joi.string(),
+  preview: Joi.string(),
+  ingredients: Joi.array(),
+  instructions: Joi.string(),
 });
 
 const createRecipe = async (req, res, next) => {
@@ -26,22 +33,57 @@ const createRecipe = async (req, res, next) => {
     return res.status(400).json({ message: error.details[0].message });
   }
 
-  const { area, title, category, time, ingredients, instructions } = req.body;
-  const { _id: userId } = req.user;
   try {
-    const recipe = await insertRecipe({
-      area,
-      title,
-      // thumb: photoURL,
-      category,
-      time,
-      ingredients,
-      instructions,
-      favorites: [],
-      youtube: "",
-      userId,
-    });
-    return res.status(201).json({ message: "Recipe created", recipe });
+    const { area, title, category, time, ingredients, instructions } = req.body;
+    const { _id: userId } = req.user;
+    if (req.file) {
+      const storagePhotoDir = path.join(process.cwd(), "public/photos");
+
+      const { path: temporaryPath } = req.file;
+      const extension = path.extname(temporaryPath);
+      const fileName = `${uuidV4()}${extension}`;
+      const filePath = path.join(storagePhotoDir, fileName);
+
+      try {
+        await fs.rename(temporaryPath, filePath);
+      } catch (e) {
+        await fs.unlink(temporaryPath);
+        return next(e);
+      }
+
+      const thumb = `/photos/${fileName}`;
+
+      const previewFileName = `${uuidV4()}_preview${extension}`;
+      const previewFilePath = path.join(storagePhotoDir, previewFileName);
+      await fs.copyFile(filePath, previewFilePath);
+
+      const isValidAndTransform = await isImageAndTransform(
+        previewFilePath,
+        357,
+        344
+      );
+      if (!isValidAndTransform) {
+        await fs.unlink(filePath);
+        await fs.unlink(previewFilePath);
+        return res.status(400).json({ message: "Isnt a photo but pretending" });
+      }
+      const preview = `/photos/${previewFileName}`;
+
+      const recipe = await insertRecipe({
+        area,
+        title,
+        thumb,
+        preview,
+        category,
+        time,
+        ingredients,
+        instructions,
+        favorites: [],
+        youtube: "",
+        userId,
+      });
+      return res.status(201).json({ message: "Recipe created" });
+    }
   } catch (err) {
     next(err);
   }
