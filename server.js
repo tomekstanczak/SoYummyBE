@@ -20,14 +20,6 @@ require("dotenv").config();
 const { DB_HOST: urlDb } = process.env;
 const connection = mongoose.connect(urlDb);
 
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
-
 //Middleware pomocniczy do logowania czy endpoint się wywołuje - do skasowania po zakończeniu pracy
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
