@@ -98,7 +98,7 @@ const deleteRecipe = async (req, res, next) => {
 
     if (recipeToDelete.owner.toString() === userId.toString()) {
       await removeRecipe(recipeId);
-      res.json({
+      return res.json({
         status: 200,
         message: `You  have deleted recipe: ${recipeToDelete.title}`,
       });
