@@ -6,6 +6,7 @@ const setupFolder = require("./server-service");
 
 const { swaggerSpec, swaggerUi } = require("./config/swagger-config");
 
+app.use(cors());
 const app = express();
 
 app.set("view engine", "ejs");
@@ -18,8 +19,6 @@ require("dotenv").config();
 
 const { DB_HOST: urlDb } = process.env;
 const connection = mongoose.connect(urlDb);
-
-app.use(cors());
 
 app.use(
   cors({
