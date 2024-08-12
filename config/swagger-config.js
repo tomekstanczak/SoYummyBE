@@ -1,5 +1,6 @@
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const path = require('path');
 
 
 const swaggerDefinition = {
@@ -11,6 +12,9 @@ const swaggerDefinition = {
     },
     servers: [
         {
+            url: 'https://so-yummy-31fabc853d58.herokuapp.com/',
+        },
+        {
             url: 'http://localhost:8000',
         },
     ],
@@ -18,7 +22,7 @@ const swaggerDefinition = {
 
 const options = {
     swaggerDefinition,
-    apis: ['../routes/*.js'],
+    apis: [path.join(__dirname, '../routes/*.js')],
 };
 
 const swaggerSpec = swaggerJSDoc(options);

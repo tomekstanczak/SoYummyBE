@@ -11,7 +11,7 @@ const params = {
 
 const strategy = new Strategy(params, async (payload, done) => {
   try {
-    const user = await User.findOne({ id: payload._id }).lean();
+    const user = await User.findOne({ _id: payload.id }).lean();
     if (!user) {
       return done(new Error("User not found"));
     }
