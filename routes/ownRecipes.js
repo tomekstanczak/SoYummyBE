@@ -87,7 +87,7 @@ router.delete("/:id", auth, deleteRecipe);
  *     tags: [ownRecipes]
  *     responses:
  *       200:
- *         description: Successful response
+ *         description: Array of recipe objects
  *         content:
  *           application/json:
  *             example:
