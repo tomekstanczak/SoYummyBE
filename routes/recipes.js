@@ -14,7 +14,7 @@ const router = express.Router();
  * /recipes/category-list:
  *   get:
  *     summary: Get a list of all categories
- *     tags: [Category]
+ *     tags: [Recipes]
  *     responses:
  *       200:
  *         description: Successful response
@@ -115,6 +115,30 @@ router.get('/recipes/:category', getRecipeWithLimit); //swagger ready
 
 router.get('/recipe/:id', getRecipeById);
 
+/**
+ * @swagger
+ * /search:
+ *   get:
+ *     summary: Search recipes by keyword
+ *     tags: [Recipes]
+ *     parameters:
+ *       - name: keyword
+ *         in: path
+ *         description: The keyword
+ *         schema:
+ *           type: string
+ *         example:
+ *             chicken
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               data: [{}]
+ *       404:
+ *         description: Recipe not found
+ */
 
 //Search
 router.get('/search', searchByKey);
