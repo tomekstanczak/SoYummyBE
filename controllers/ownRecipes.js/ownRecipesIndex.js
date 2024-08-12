@@ -17,13 +17,13 @@ const {
 const isImageAndTransform = require("../auth/auth-service");
 
 const recipeSchema = Joi.object({
-  title: Joi.string(),
+  title: Joi.string().required(),
   area: Joi.string(),
-  category: Joi.string(),
+  category: Joi.string().required(),
   time: Joi.number(),
   thumb: Joi.string(),
   preview: Joi.string(),
-  ingredients: Joi.array(),
+  ingredients: Joi.array().required(),
   instructions: Joi.string(),
 });
 
@@ -36,6 +36,18 @@ const createRecipe = async (req, res, next) => {
   try {
     const { area, title, category, time, ingredients, instructions } = req.body;
     const { _id: userId } = req.user;
+    const saveToDb = {
+      area,
+      title,
+      category,
+      time,
+      ingredients,
+      instructions,
+      favorites: [],
+      youtube: "",
+      userId,
+    };
+
     if (req.file) {
       const storagePhotoDir = path.join(process.cwd(), "public/photos");
 
@@ -51,7 +63,7 @@ const createRecipe = async (req, res, next) => {
         return next(e);
       }
 
-      const thumb = `/photos/${fileName}`;
+      saveToDb.thumb = `/photos/${fileName}`;
 
       const previewFileName = `${uuidV4()}_preview${extension}`;
       const previewFilePath = path.join(storagePhotoDir, previewFileName);
@@ -67,23 +79,11 @@ const createRecipe = async (req, res, next) => {
         await fs.unlink(previewFilePath);
         return res.status(400).json({ message: "Isnt a photo but pretending" });
       }
-      const preview = `/photos/${previewFileName}`;
-
-      const recipe = await insertRecipe({
-        area,
-        title,
-        thumb,
-        preview,
-        category,
-        time,
-        ingredients,
-        instructions,
-        favorites: [],
-        youtube: "",
-        userId,
-      });
-      return res.status(201).json({ message: "Recipe created" });
+      saveToDb.preview = `/photos/${previewFileName}`;
     }
+    await insertRecipe(saveToDb);
+    console.log(saveToDb);
+    return res.status(201).json({ message: "Recipe created" });
   } catch (err) {
     next(err);
   }

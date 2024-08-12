@@ -15,29 +15,19 @@ const fetchOwnRecipes = (userId) => {
   return Recipe.find({ owner: userId });
 };
 
-const insertRecipe = ({
-  area,
-  title,
-  category,
-  time,
-  thumb,
-  preview,
-  ingredients,
-  instructions,
-  userId,
-}) => {
+const insertRecipe = (saveToDb) => {
   return Recipe.create({
-    area,
-    title,
-    category,
-    time,
-    thumb,
-    preview,
-    ingredients,
-    instructions,
+    area: saveToDb.area,
+    title: saveToDb.title,
+    category: saveToDb.category,
+    time: saveToDb.time,
+    thumb: saveToDb.thumb,
+    preview: saveToDb.preview,
+    ingredients: saveToDb.ingredients,
+    instructions: saveToDb.instructions,
     favorites: [],
     youtube: "",
-    owner: userId,
+    owner: saveToDb.userId,
   });
 };
 
