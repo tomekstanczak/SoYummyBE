@@ -4,7 +4,6 @@
 // Utwórz punkt końcowy do odbierania informacji o użytkowniku.
 // Utwórz punkt końcowy do aktualizacji danych użytkownika lub jednego z pól informacji kontaktowych o użytkowniku.
 // Utwórz punkt końcowy do wylogowania użytkownika.
-const gravatar = require("gravatar");
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 const path = require("path");
@@ -52,12 +51,7 @@ const createUser = async (req, res, next) => {
     return res.status(409).json({ message: "This email is already taken" });
   }
   try {
-    const generateAvatarURL = gravatar.url(email, {
-      s: "250",
-      r: "pg",
-      d: "404",
-    });
-    const newUser = new User({ name, email, avatarURL: generateAvatarURL });
+    const newUser = new User({ name, email, avatarURL: "" });
     await newUser.setPassword(password);
     await newUser.save();
     return res.status(201).json({ message: "Account created" });
@@ -156,7 +150,7 @@ const updateUser = async (req, res, next) => {
         await fs.unlink(filePath);
         return res.status(400).json({ message: "Isnt a photo but pretending" });
       }
-      const newAvatarURL = `/avatars/${fileName}`;
+      const newAvatarURL = `avatars/${fileName}`;
       user.avatarURL = newAvatarURL;
     }
 
