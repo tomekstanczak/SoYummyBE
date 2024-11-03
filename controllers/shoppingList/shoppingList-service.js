@@ -4,10 +4,7 @@ const User = require("../../models/user");
 const fetchShoppingList = (shoppingList) => {
   return Ingredient.find(
     { _id: { $in: shoppingList } },
-    { ttl: 1 },
-    { desc: 1 },
-    { t: 1 },
-    { thb: 1 }
+    { ttl: 1, desc: 1, t: 1, thb: 1 }
   ).lean();
 };
 
