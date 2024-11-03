@@ -1,15 +1,21 @@
-const Ingredient = require('../../models/ingredients');
-const User = require('../../models/user');
+const Ingredient = require("../../models/ingredients");
+const User = require("../../models/user");
 
 const fetchShoppingList = (shoppingList) => {
-    return Ingredient.find({ _id: { $in: shoppingList }}, {ttl: 1}).lean()
-}
+  return Ingredient.find(
+    { _id: { $in: shoppingList } },
+    { ttl: 1 },
+    { desc: 1 },
+    { t: 1 },
+    { thb: 1 }
+  ).lean();
+};
 
 const fetchUserById = (userId) => {
-    return User.findById({ _id: userId } );
-}
+  return User.findById({ _id: userId });
+};
 
 module.exports = {
-    fetchShoppingList,
-    fetchUserById
-}
+  fetchShoppingList,
+  fetchUserById,
+};
