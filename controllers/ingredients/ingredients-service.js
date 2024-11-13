@@ -10,14 +10,14 @@ const fetchIngredientId = async (keyword) => {
     { ttl: { $regex: keyword, $options: "i" } },
     { _id: 1 }
   );
-  return ingredient ? ingredient._id.toString() : null; // Zwróć tylko _id jako string lub null
+  return ingredient._id;
 };
 
-const searchRecipesByIngredient = (keyword) => {
+const searchRecipesByIngredient = ({ keyword }) => {
   return Recipe.find({
     ingredients: {
       $elemMatch: {
-        measure: { $regex: keyword, $options: "i" },
+        _id: keyword,
       },
     },
   });
