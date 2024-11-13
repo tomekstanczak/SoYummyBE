@@ -26,6 +26,7 @@ const getRecipeByIngredient = async (req, res, next) => {
         message: "Keyword is missing.",
       });
     }
+
     const idKeyword = await fetchIngredientId(keyword);
 
     if (!idKeyword) {

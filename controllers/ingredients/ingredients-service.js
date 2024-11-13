@@ -5,13 +5,12 @@ const fetchIngredientsList = () => {
   return Ingredient.find({}).lean();
 };
 
-const fetchIngredientId = (keyword) => {
-  return Ingredient.find(
-    {
-      ttl: { $regex: keyword, $options: "i" },
-    },
+const fetchIngredientId = async (keyword) => {
+  const ingredient = await Ingredient.findOne(
+    { ttl: { $regex: keyword, $options: "i" } },
     { _id: 1 }
   );
+  return ingredient ? ingredient._id.toString() : null; // Zwróć tylko _id jako string lub null
 };
 
 const searchRecipesByIngredient = (keyword) => {
