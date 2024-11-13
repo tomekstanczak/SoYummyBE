@@ -13,11 +13,11 @@ const fetchIngredientId = async (keyword) => {
   return ingredient._id;
 };
 
-const searchRecipesByIngredient = ({ keyword }) => {
+const searchRecipesByIngredient = (keyword) => {
   return Recipe.find({
     ingredients: {
       $elemMatch: {
-        _id: keyword,
+        id: keyword,
       },
     },
   });
